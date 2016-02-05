@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MinCaml Web IDE</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js"></script>
+    <style>
+        .editor {
+            font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
+            font-size: 1em;
+            line-height: 1.2em;
+            padding-top: 5px;
+            padding-left: 5px;
+            padding-right: 10px;;
+        }
+        .bg-grey {
+            background-color: #55595c;
+            color: white;
+        }
+        html, body, .full-height {
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid full-height" style="min-width: 800px;">
+    <div class="row bg-inverse card-header" style="height: 10%; min-height: 50px;">
+        <div class="container">
+            <h2 class="text-md-center">MinCaml Web IDE</h2>
+        </div>
+    </div>
+    <div class="row" style="height: 90%; min-height: 500px;">
+        <div class="col-xs-6 bg-grey" style="height: 100%;">
+            <div style="height: 5%;">
+
+            </div>
+            <div class="row" style="height: 85%; overflow: auto;">
+                <div class="col-xs-1 editor" style="height: 100%; text-align: right;">
+                    1<br/>2<br/>3<br/>4<br/>5<br/>6<br/>7<br/>8<br/>9<br/>10<br/>
+                    11<br/>12<br/>13<br/>14<br/>15<br/>16<br/>17<br/>18<br/>19<br/>20<br/>
+
+                </div>
+                <div class="col-xs-11 bg-inverse editor" contenteditable="true"  spellcheck="false" style="min-height: 100%;">
+                    1 + 1
+                </div>
+            </div>
+            <div style="text-align: center; padding-top: 10px; height: 10%;">
+                <span style="">
+                    <span class="btn-group" style="padding-left: 5px; padding-right: 5px;">
+                        <a class="btn btn-primary btn-md" role="button">
+                            <i class="fa fa-play"></i> Run
+                        </a>
+                    </span>
+                    <span class="btn-group" style="padding-left: 5px; padding-right: 5px;">
+                        <a class="btn btn-primary btn-md" role="button">
+                            <i class="fa fa-file"></i> Save
+                        </a>
+                    </span>
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-6 bg-grey" style="height: 100%; padding-left: 50px; padding-right: 50px;">
+            <div class="modal-header" style="margin-top: 0; padding-bottom: 0;">
+                <h1><small>status</small></h1>
+            </div>
+            <div class="bg-inverse editor" spellcheck="false" style="height: 35%; margin-top: 10px;">
+                ok
+            </div>
+            <div class="modal-header" style="margin-top: 0; padding-bottom: 0;">
+                <h1><small>result</small></h1>
+            </div>
+            <div class="bg-inverse editor" spellcheck="false" style="height: 35%; margin-top: 10px;">
+                ok
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
