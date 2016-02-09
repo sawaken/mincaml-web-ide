@@ -1,6 +1,7 @@
-{exec} = require 'child_process'
+require 'shelljs/global'
 
 task 'test', 'run test/*.coffee', (option) ->
-  exec './node_modules/.bin/mocha --compilers coffee:coffee-script/register test/*.coffee', (err, stdout, stderr) ->
-    throw err if err
-    console.log stdout + stderr
+  mochaPath = './node_modules/.bin/mocha'
+  mochaOption = '--compilers coffee:coffee-script/register'
+  result = exec "#{mochaPath} #{mochaOption} test/*.coffee"
+  exit(result.code)
