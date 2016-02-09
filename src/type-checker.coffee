@@ -53,12 +53,9 @@ class TypeChecker
         @unifyTwoAST(ast.thenExp, ast.elseExp)
         ast.expType = ast.thenExp.expType
       when 'let'
-        varType = @newTypeVar()
-        newEnv = [{"#{ast.varName.string}": varType}].concat(env)
         @typing(ast.varExp, env)
-        @typing(ast.bodyExp, newEnv)
-        @unifyOneAST(ast.varExp, varType)
-        ast.expType = ast.bodyExp.expType
+        newEnv = [{"#{ast.varName.string}": ast.varExp.expType}].concat(env)
+        ast.expType = @typing(ast.bodyExp, newEnv)
       when 'let-rec'
         funcExpType = @newTypeVar()
         funcType = funcExpType
@@ -108,10 +105,8 @@ class TypeChecker
       when 'var-ref'
         resolved = null
         for obj in env
-          if obj.hasOwnProperty(ast.string)
-            resolved = obj[ast.string]
-            break
-        ast.expType = resolved
+          return ast.expType = obj[ast.string] if obj.hasOwnProperty(ast.string)
+        throw new UnboundVariableError(ast)
       when 'bool'
         ast.expType = @newBoolType()
       when 'int'
@@ -124,6 +119,10 @@ class MismatchedTypeError extends Error
 
 class UnexpectedTypeError extends Error
   constructor: (@ast, @type) ->
+
+class UnboundVariableError extends Error
+  constructor: (@ast) ->
+
 
 if exports?
   exports.TypeChecker = TypeChecker
