@@ -19,7 +19,8 @@ describe 'test mincaml parser', ->
   before ->
     peg = require 'pegjs'
     fs = require 'fs'
-    mincamlParser = peg.buildParser fs.readFileSync(__dirname + '/../parser/mincaml.pegjs', 'utf8')
+    grammerFile = __dirname + '/../parser/mincaml.pegjs'
+    mincamlParser = peg.buildParser fs.readFileSync(grammerFile, 'utf8')
 
   it 'arithmetic expression', ->
     ptest '0 == 1*2+3*4',

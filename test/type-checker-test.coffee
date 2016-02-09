@@ -4,80 +4,75 @@ expect = require('chai').expect
 
 describe 'type-checker test', ->
   it 'simple if', ->
-    ta = new TestingAST()
-    tc = new TypeChecker(ta.simpleIf)
+    ast = (new TestingAST()).simpleIf
+    tc = new TypeChecker(ast)
     tc.check()
-    expect(ta.simpleIf.expType.getTypeName()).to.equal("Int")
-    expect(ta.simpleIf.condExp.expType.getTypeName()).to.equal("Bool")
-    expect(ta.simpleIf.thenExp.expType.getTypeName()).to.equal("Int")
-    expect(ta.simpleIf.elseExp.expType.getTypeName()).to.equal("Int")
+    expect(ast.expType.getTypeName()).to.equal("Int")
+    expect(ast.condExp.expType.getTypeName()).to.equal("Bool")
+    expect(ast.thenExp.expType.getTypeName()).to.equal("Int")
+    expect(ast.elseExp.expType.getTypeName()).to.equal("Int")
 
   it 'simple let', ->
-    ta = new TestingAST()
-    tc = new TypeChecker(ta.simpleLet)
+    ast = (new TestingAST()).simpleLet
+    tc = new TypeChecker(ast)
     tc.check()
-    expect(ta.simpleLet.expType.getTypeName()).to.equal("Int")
-    expect(ta.simpleLet.varExp.expType.getTypeName()).to.equal("Int")
-    expect(ta.simpleLet.bodyExp.expType.getTypeName()).to.equal("Int")
+    expect(ast.expType.getTypeName()).to.equal("Int")
+    expect(ast.varExp.expType.getTypeName()).to.equal("Int")
+    expect(ast.bodyExp.expType.getTypeName()).to.equal("Int")
 
   it 'simple let-rec', ->
-    ta = new TestingAST()
-    tc = new TypeChecker(ta.simpleLetRec)
+    ast = (new TestingAST()).simpleLetRec
+    tc = new TypeChecker(ast)
     tc.check()
-    expect(ta.simpleLetRec.expType.getTypeName()).to.equal("Int")
-    expect(ta.simpleLetRec.funcExp.expType.getTypeName()).to.equal("Int")
-    expect(ta.simpleLetRec.bodyExp.expType.getTypeName()).to.equal("Int")
+    expect(ast.expType.getTypeName()).to.equal("Int")
+    expect(ast.funcExp.expType.getTypeName()).to.equal("Int")
+    expect(ast.bodyExp.expType.getTypeName()).to.equal("Int")
 
   it 'simple let-tuple', ->
-    ta = new TestingAST()
-    tc = new TypeChecker(ta.simpleLetTuple)
+    ast = (new TestingAST()).simpleLetTuple
+    tc = new TypeChecker(ast)
     tc.check()
-    expect(ta.simpleLetTuple.expType.getTypeName()).to.equal("Int")
-    expect(ta.simpleLetTuple.tupleExp.expType.getTypeName()).to.equal("Tuple")
-    expect(ta.simpleLetTuple.tupleExp.expType.getTypeArgs().length).to.equal(2)
-    expect(ta.simpleLetTuple.tupleExp.expType.getTypeArgs()[0].getTypeName()).to.equal("Int")
-    expect(ta.simpleLetTuple.tupleExp.expType.getTypeArgs()[1].getTypeName()).to.equal("Int")
-    expect(ta.simpleLetTuple.bodyExp.expType.getTypeName()).to.equal("Int")
+    expect(ast.expType.getTypeName()).to.equal("Int")
+    expect(ast.tupleExp.expType.getTypeName()).to.equal("Tuple")
+    expect(ast.tupleExp.expType.getTypeArgs().length).to.equal(2)
+    expect(ast.tupleExp.expType.getTypeArgs()[0].getTypeName()).to.equal("Int")
+    expect(ast.tupleExp.expType.getTypeArgs()[1].getTypeName()).to.equal("Int")
+    expect(ast.bodyExp.expType.getTypeName()).to.equal("Int")
 
   it 'binary-tree', ->
-    ta = new TestingAST()
-    tc = new TypeChecker(ta.binaryTree)
+    ast = (new TestingAST()).binaryTree
+    tc = new TypeChecker(ast)
     tc.check()
-    expect(ta.binaryTree.expType.getTypeName()).to.equal("Int")
-    expect(ta.binaryTree.leftExp.expType.getTypeName()).to.equal("Int")
-    expect(ta.binaryTree.leftExp.leftExp.expType.getTypeName()).to.equal("Int")
-    expect(ta.binaryTree.leftExp.rightExp.expType.getTypeName()).to.equal("Int")
-    expect(ta.binaryTree.rightExp.expType.getTypeName()).to.equal("Int")
-    expect(ta.binaryTree.rightExp.leftExp.expType.getTypeName()).to.equal("Int")
-    expect(ta.binaryTree.rightExp.rightExp.expType.getTypeName()).to.equal("Int")
+    expect(ast.expType.getTypeName()).to.equal("Int")
+    expect(ast.leftExp.expType.getTypeName()).to.equal("Int")
+    expect(ast.leftExp.leftExp.expType.getTypeName()).to.equal("Int")
+    expect(ast.leftExp.rightExp.expType.getTypeName()).to.equal("Int")
+    expect(ast.rightExp.expType.getTypeName()).to.equal("Int")
+    expect(ast.rightExp.leftExp.expType.getTypeName()).to.equal("Int")
+    expect(ast.rightExp.rightExp.expType.getTypeName()).to.equal("Int")
 
   it 'unary-tree', ->
-    ta = new TestingAST()
-    tc = new TypeChecker(ta.unaryTree)
+    ast = (new TestingAST()).unaryTree
+    tc = new TypeChecker(ast)
     tc.check()
-    expect(ta.unaryTree.expType.getTypeName()).to.equal("Bool")
-    expect(ta.unaryTree.exp.expType.getTypeName()).to.equal("Bool")
-    expect(ta.unaryTree.exp.exp.expType.getTypeName()).to.equal("Bool")
+    expect(ast.expType.getTypeName()).to.equal("Bool")
+    expect(ast.exp.expType.getTypeName()).to.equal("Bool")
+    expect(ast.exp.exp.expType.getTypeName()).to.equal("Bool")
 
   it 'parenthesis', ->
-    ta = new TestingAST()
-    tc = new TypeChecker(ta.parenthesis)
+    ast = (new TestingAST()).parenthesis
+    tc = new TypeChecker(ast)
     tc.check()
-    expect(ta.parenthesis.expType.getTypeName()).to.equal("Int")
-    expect(ta.parenthesis.exp.expType.getTypeName()).to.equal("Int")
+    expect(ast.expType.getTypeName()).to.equal("Int")
+    expect(ast.exp.expType.getTypeName()).to.equal("Int")
 
   it 'tuple', ->
-    ta = new TestingAST()
-    tc = new TypeChecker(ta.tuple)
+    ast = (new TestingAST()).tuple
+    tc = new TypeChecker(ast)
     tc.check()
-    expect(ta.tuple.expType.getTypeName()).to.equal("Tuple")
-    expect(ta.tuple.expType.getTypeArgs().length).to.equal(2)
-    expect(ta.tuple.expType.getTypeArgs()[0].getTypeName()).to.equal("Int")
-    expect(ta.tuple.expType.getTypeArgs()[1].getTypeName()).to.equal("Int")
-    expect(ta.tuple.exps[0].expType.getTypeName()).to.equal("Int")
-    expect(ta.tuple.exps[1].expType.getTypeName()).to.equal("Int")
-
-
-
-
-
+    expect(ast.expType.getTypeName()).to.equal("Tuple")
+    expect(ast.expType.getTypeArgs().length).to.equal(2)
+    expect(ast.expType.getTypeArgs()[0].getTypeName()).to.equal("Int")
+    expect(ast.expType.getTypeArgs()[1].getTypeName()).to.equal("Int")
+    expect(ast.exps[0].expType.getTypeName()).to.equal("Int")
+    expect(ast.exps[1].expType.getTypeName()).to.equal("Int")

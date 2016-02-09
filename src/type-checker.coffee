@@ -83,8 +83,9 @@ class TypeChecker
         ast.expType = ast.bodyExp.expType
       when 'apply'
         expType = @newTypeVar()
+        funcType = @newFuncType(@typing(ast.rightExp, env), expType)
         @typing(ast.leftExp, env)
-        @unifyOneAST(ast.leftExp, @newFuncType(@typing(ast.rightExp, env), expType))
+        @unifyOneAST(ast.leftExp, funcType)
         ast.expType = expType
       when 'eq', 'le', 'add', 'sub', 'mul', 'div'
         @typing(ast.leftExp, env)

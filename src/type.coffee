@@ -17,13 +17,13 @@ class Type
   unify: (other) ->
     return if this.same(other)
     if this.getTypeName() != null && other.getTypeName() != null
-      if this.getTypeName() == other.getTypeName() && this.getTypeArgs().length == other.getTypeArgs().length
-        otherArgs = other.getTypeArgs()
-        for v, idx in this.getTypeArgs()
-          v.unify(otherArgs[idx])
-        this.root().parent = other
-      else
+      unless this.getTypeName() == other.getTypeName()
         throw new UnifyError(this, other)
+      unless this.getTypeArgs().length == other.getTypeArgs().length
+        throw new UnifyError(this, other)
+      for v, idx in this.getTypeArgs()
+        v.unify(other.getTypeArgs()[idx])
+      this.root().parent = other
     else if this.getTypeName() == null && other.getTypeName() != null
       if other.occurCheck(this)
         this.root().parent = other

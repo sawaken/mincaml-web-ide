@@ -4,7 +4,7 @@ expect = require('chai').expect
 describe 'type test', ->
   T = (tname = null, targs = []) ->
     new Type(null, tname, targs)
-    
+
   it 'simple unify', ->
     a = T()
     b = T()
@@ -49,7 +49,3 @@ describe 'type test', ->
     letRecExp.unify(bodyExp)
     expect(funcF.toString()).to.equal('Int -> Int')
     expect(letRecExp.getTypeName()).to.equal('Int')
-    
-    
-    
-    

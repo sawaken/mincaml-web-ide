@@ -15,7 +15,10 @@ class Program
       when 'if'
         new Continuation =>
           @evaluate(ast.condExp, env).then (x) =>
-            if x == true then @evaluate(ast.thenExp, env) else @evaluate(ast.elseExp, env)
+            if x == true
+              @evaluate(ast.thenExp, env)
+            else
+              @evaluate(ast.elseExp, env)
       when 'let'
         new Continuation =>
           @evaluate(ast.varExp, env).then (x) =>
@@ -91,8 +94,9 @@ class Closure
     @env = [{"#{name}": this}].concat(@env)
 
   apply: (value) ->
-    paramName = @paramNames[0].string
-    new Closure([{"#{paramName}": value}].concat(@env), @paramNames.slice(1), @bodyExp)
+    firstParamName = @paramNames[0].string
+    newEnv = [{"#{firstParamName}": value}].concat(@env)
+    new Closure(newEnv, @paramNames.slice(1), @bodyExp)
 
 class Continuation
   constructor: (@step) ->

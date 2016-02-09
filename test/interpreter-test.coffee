@@ -1,5 +1,9 @@
 expect = require('chai').expect
-{Program, Closure, Continuation} = require  __dirname + '/../src/interpreter.coffee'
+{
+  Program,
+  Closure,
+  Continuation
+} = require  __dirname + '/../src/interpreter.coffee'
 
 describe 'interpreter test', ->
   simpleIf =
