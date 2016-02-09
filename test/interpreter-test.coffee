@@ -4,85 +4,11 @@ expect = require('chai').expect
   Closure,
   Continuation
 } = require  __dirname + '/../src/interpreter.coffee'
+{TestingAST} = require  __dirname + '/testing-ast.coffee'
 
 describe 'interpreter test', ->
-  simpleIf =
-    syntax: 'if'
-    condExp: {syntax: 'bool', bool: true}
-    thenExp: {syntax: 'int', number: 1}
-    elseExp: {syntax: 'int', number: 2}
-
-  simpleLet =
-    syntax: 'let'
-    varName: {syntax: 'identifier', string: 'x'}
-    varExp: {syntax: 'int', number: 1}
-    bodyExp: {syntax: 'var-ref', string: 'x'}
-
-  simpleLetRec =
-    syntax: 'let-rec'
-    funcName: {syntax: 'identifier', string: 'f'}
-    funcParamNames: [
-      {syntax: 'identifier', string: 'x'}
-      {syntax: 'identifier', string: 'y'}
-    ]
-    funcExp:
-      syntax: 'add'
-      leftExp: {syntax: 'var-ref', string: 'x'}
-      rightExp: {syntax: 'var-ref', string: 'y'}
-    bodyExp:
-      syntax: 'apply'
-      leftExp:
-        syntax: 'apply'
-        leftExp: {syntax: 'var-ref', string: 'f'}
-        rightExp: {syntax: 'int', number: 1}
-      rightExp: {syntax: 'int', number: 1}
-
-  simpleLetTuple =
-    syntax: 'let-tuple'
-    varNames: [
-      {syntax: 'identifier', string: 'x'},
-      {syntax: 'identifier', string: 'y'}
-    ]
-    tupleExp:
-      syntax: 'tuple'
-      exps: [
-        {syntax: 'int', number: 1},
-        {syntax: 'int', number: 2}
-      ]
-    bodyExp:
-      syntax: 'add'
-      leftExp: {syntax: 'var-ref', string: 'x'}
-      rightExp: {syntax: 'var-ref', string: 'y'}
-
-  binaryTree =
-    syntax: 'add'
-    leftExp:
-      syntax: 'sub'
-      leftExp: {syntax: 'int', number: 1}
-      rightExp: {syntax: 'int', number: 2}
-    rightExp:
-      syntax: 'mul'
-      leftExp: {syntax: 'int', number: 3}
-      rightExp: {syntax: 'int', number: 4}
-
-  unaryTree =
-    syntax: 'not'
-    exp:
-      syntax: 'not'
-      exp: {syntax: 'bool', bool: true}
-
-  parenthesis =
-    syntax: 'parenthesis'
-    exp: {syntax: 'int', number: 1}
-
-  tuple =
-    syntax: 'tuple'
-    exps: [
-      {syntax: 'int', number: 1},
-      {syntax: 'int', number: 2}
-    ]
-
   it 'simple if', ->
+    simpleIf = (new TestingAST()).simpleIf
     p = new Program(simpleIf)
     expect(p.terminated).to.be.false
     expect(p.currentAST).to.equal(simpleIf)
@@ -97,6 +23,7 @@ describe 'interpreter test', ->
     expect(p.cont).to.equal(1)
 
   it 'simple let', ->
+    simpleLet = (new TestingAST()).simpleLet
     p = new Program(simpleLet)
     expect(p.currentAST).to.equal(simpleLet)
     p.step()
@@ -107,6 +34,7 @@ describe 'interpreter test', ->
     expect(p.cont).to.equal(1)
 
   it 'simple let-rec', ->
+    simpleLetRec = (new TestingAST()).simpleLetRec
     p = new Program(simpleLetRec)
     expect(p.currentAST).to.equal(simpleLetRec)
     p.step()
@@ -129,6 +57,7 @@ describe 'interpreter test', ->
     expect(p.cont).to.equal(2)
 
   it 'simple let-tuple', ->
+    simpleLetTuple = (new TestingAST()).simpleLetTuple
     p = new Program(simpleLetTuple)
     expect(p.currentAST).to.equal(simpleLetTuple)
     p.step()
@@ -147,6 +76,7 @@ describe 'interpreter test', ->
     expect(p.cont).to.equal(3)
 
   it 'binary tree', ->
+    binaryTree = (new TestingAST()).binaryTree
     p = new Program(binaryTree)
     expect(p.currentAST).to.equal(binaryTree)
     p.step()
@@ -165,6 +95,7 @@ describe 'interpreter test', ->
     expect(p.cont).to.equal(11)
 
   it 'unary tree', ->
+    unaryTree = (new TestingAST()).unaryTree
     p = new Program(unaryTree)
     expect(p.currentAST).to.equal(unaryTree)
     p.step()
@@ -175,12 +106,14 @@ describe 'interpreter test', ->
     expect(p.cont).to.equal(true)
 
   it 'parenthesis', ->
+    parenthesis = (new TestingAST()).parenthesis
     p = new Program(parenthesis)
     expect(p.currentAST).to.equal(parenthesis.exp)
     p.step()
     expect(p.cont).to.equal(1)
 
   it 'tuple', ->
+    tuple = (new TestingAST()).tuple
     p = new Program(tuple)
     expect(p.currentAST).to.equal(tuple)
     p.step()
