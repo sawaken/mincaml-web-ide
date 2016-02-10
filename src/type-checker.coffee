@@ -128,3 +128,4 @@ if exports?
   exports.TypeChecker = TypeChecker
   exports.MismatchedTypeError = MismatchedTypeError
   exports.UnexpectedTypeError = UnexpectedTypeError
+  exports.UnboundVariableError = UnboundVariableError
