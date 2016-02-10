@@ -57,10 +57,9 @@ class Type
           rightStr = r.toString()
           leftStr + ' -> ' + rightStr
         when 'Tuple'
-          '(' + (a.toStrig() for a in @getTypeArgs()).join(', ') + ')'
+          '(' + (a.toString() for a in @getTypeArgs()).join(', ') + ')'
         else
           @getTypeName()
-
 
 class UnifyError extends Error
   constructor: (@a, @b) ->
