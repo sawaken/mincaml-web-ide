@@ -9,61 +9,70 @@ class Program
       @terminated = !(@cont instanceof Continuation)
 
   evaluate: (ast, env = {}) ->
-    @currentAST = ast
-    @currentENV = env
+    context = {ast: ast, env: env}
     switch ast.syntax
       when 'if'
-        new Continuation =>
+        new Continuation context, 'in', =>
           @evaluate(ast.condExp, env).then (x) =>
             if x == true
-              @evaluate(ast.thenExp, env)
+              @evaluate(ast.thenExp, env).then (y) =>
+                new Continuation context, 'out', => y
             else
-              @evaluate(ast.elseExp, env)
+              @evaluate(ast.elseExp, env).then (y) =>
+                new Continuation context, 'out', => y
       when 'let'
-        new Continuation =>
+        new Continuation context, 'in', =>
           @evaluate(ast.varExp, env).then (x) =>
-            @evaluate(ast.bodyExp, [{"#{ast.varName.string}": x}].concat(env))
+            newEnv = [{"#{ast.varName.string}": x}].concat(env)
+            @evaluate(ast.bodyExp, newEnv).then (y) =>
+              new Continuation context, 'out', => y
       when 'let-rec'
-        new Continuation =>
+        new Continuation context, 'in', =>
           closure = new Closure(env, ast.funcParamNames, ast.funcExp)
           closure.bindName(ast.funcName.string)
-          @evaluate(ast.bodyExp, closure.env)
+          @evaluate(ast.bodyExp, closure.env).then (y) =>
+            new Continuation context, 'out', => y
       when 'let-tuple'
-        new Continuation =>
+        new Continuation context, 'in', =>
           @evaluate(ast.tupleExp, env).then (t) =>
             newEnv = {}
             for v, idx in ast.varNames
               newEnv[v.string] = t[idx]
-            @evaluate(ast.bodyExp, [newEnv].concat(env))
+            @evaluate(ast.bodyExp, [newEnv].concat(env)).then (y) =>
+              new Continuation context, 'out', => y
       when 'apply'
-        new Continuation =>
+        new Continuation context, 'in', =>
           @evaluate(ast.leftExp, env).then (x) =>
             @evaluate(ast.rightExp, env).then (y) =>
               closure = x.apply(y)
               if closure.paramNames.length == 0
-                @evaluate(closure.bodyExp, closure.env)
+                @evaluate(closure.bodyExp, closure.env).then (z) =>
+                  new Continuation context, 'out', => z
               else
-                closure
+                new Continuation context, 'out', => closure
       when 'eq', 'le', 'add', 'sub', 'mul', 'div'
-        new Continuation =>
+        new Continuation context, 'in', =>
           @evaluate(ast.leftExp, env).then (x) =>
             @evaluate(ast.rightExp, env).then (y) =>
-              switch ast.syntax
-                when 'eq' then x == y
-                when 'le' then x <= y
-                when 'add' then x + y
-                when 'sub' then x - y
-                when 'mul' then x * y
-                when 'div' then x / y
+              new Continuation context, 'out', =>
+                switch ast.syntax
+                  when 'eq' then x == y
+                  when 'le' then x <= y
+                  when 'add' then x + y
+                  when 'sub' then x - y
+                  when 'mul' then x * y
+                  when 'div' then x / y
       when 'not', 'neg'
-        new Continuation =>
+        new Continuation context, 'in', =>
           @evaluate(ast.exp, env).then (x) =>
-            switch ast.syntax
-              when 'not' then !x
-              when 'neg' then -x
+            new Continuation context, 'out', =>
+              switch ast.syntax
+                when 'not' then !x
+                when 'neg' then -x
       when 'tuple'
-        new Continuation =>
-          @evaluateSeq ast.exps, (xs) => xs
+        new Continuation context, 'in', =>
+          @evaluateSeq ast.exps, (xs) =>
+            new Continuation context, 'out', => xs
       when 'parenthesis'
         @evaluate(ast.exp, env)
       when 'var-ref'
@@ -72,13 +81,13 @@ class Program
           if obj.hasOwnProperty(ast.string)
             resolved = obj[ast.string]
             break
-        new Continuation -> resolved
+        new Continuation context, 'bottom', => resolved
       when 'bool'
-        new Continuation -> ast.bool
+        new Continuation context, 'bottom', => ast.bool
       when 'int'
-        new Continuation -> ast.number
+        new Continuation context, 'bottom', => ast.number
       when 'unit'
-        new Continuation -> null
+        new Continuation context, 'bottom', => null
 
   evaluateSeq: (exps, f, xs = []) ->
     if exps.length > 0
@@ -99,10 +108,19 @@ class Closure
     new Closure(newEnv, @paramNames.slice(1), @bodyExp)
 
 class Continuation
-  constructor: (@step) ->
+  constructor: (@context, @visitType, @step) ->
+
+  isIn: ->
+    @visitType == 'in'
+
+  isOut: ->
+    @visitType == 'out'
+
+  isBottom: ->
+    @visitType == 'bottom'
 
   then: (f) ->
-    new Continuation () =>
+    new Continuation @context, @visitType, =>
       if (c = @step()) instanceof Continuation
         c.then(f)
       else

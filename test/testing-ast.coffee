@@ -81,6 +81,10 @@ class TestingAST
         {syntax: 'int', number: 2}
       ]
 
+    @int =
+      syntax: 'int'
+      number: 1
+
     # ASTs including type error
     # you should not give those as interpreter's input
     # ----------
