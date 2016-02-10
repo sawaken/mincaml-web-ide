@@ -1,5 +1,5 @@
 expect = require('chai').expect
-{Type} = require  __dirname + '/../src/type.coffee'
+{Type, UnifyError} = require  __dirname + '/../src/type.coffee'
 
 describe 'type test', ->
   T = (tname = null, targs = []) ->
@@ -49,3 +49,39 @@ describe 'type test', ->
     letRecExp.unify(bodyExp)
     expect(funcF.toString()).to.equal('Int -> Int')
     expect(letRecExp.getTypeName()).to.equal('Int')
+
+  it 'unify error (different type names)', ->
+    a = T('Int')
+    b = T('Bool')
+    try
+      a.unify(b)
+    catch error
+      expect(error).to.be.instanceof(UnifyError)
+      expect(error.a).to.equal(a)
+      expect(error.b).to.equal(b)
+
+  it 'unify error (different size tuples)', ->
+    a = T('Tuple', [T(), T()])
+    b = T('Tuple', [T(), T(), T()])
+    try
+      a.unify(b)
+    catch error
+      expect(error).to.be.instanceof(UnifyError)
+
+  it 'unify error (fail occur check)', ->
+    a = T()
+    b = T('Tuple', [a, a])
+    c = T()
+    a.unify(c)
+    try
+      b.unify(c)
+    catch error
+      expect(error).to.be.instanceof(UnifyError)
+
+  it 'unify error (child fail)', ->
+    a = T('Tuple', [T('Int'), T()])
+    b = T('Tuple', [T('Bool'), T()])
+    try
+      a.unify(b)
+    catch error
+      expect(error).to.be.instanceof(UnifyError)
