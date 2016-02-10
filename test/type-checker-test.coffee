@@ -158,7 +158,7 @@ describe 'type-checker test', ->
       expect(error.ast.expType.toString()).to.equal('Bool')
       expect(error.type.toString()).to.equal('Int')
 
-  # a test fpr unbound variables
+  # a test for unbound variables
   # ----------
 
   it 'unbound variable', ->
