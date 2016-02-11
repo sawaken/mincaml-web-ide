@@ -131,3 +131,14 @@ describe 'test mincaml parser', ->
       ]
       tupleExp: {string: 't'}
       bodyExp: {syntax: 'add'}
+
+  # tests for parse-fail
+  # ----------
+
+  it 'fail1', ->
+    try
+      mincamlParser.parse('1 + 2 ++ 3')
+    catch error
+      expect(error.name).to.equal('SyntaxError')
+      expect(error.location.start.line).to.equal(1)
+      expect(error.location.start.offset).to.equal(7)
