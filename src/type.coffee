@@ -70,3 +70,6 @@ class UnifyError extends Error
 if exports?
   exports.Type = Type
   exports.UnifyError = UnifyError
+
+@Type = Type
+@UnifyError = UnifyError

@@ -129,3 +129,8 @@ if exports?
   exports.MismatchedTypeError = MismatchedTypeError
   exports.UnexpectedTypeError = UnexpectedTypeError
   exports.UnboundVariableError = UnboundVariableError
+
+@TypeChecker = TypeChecker
+@MismatchedTypeError = MismatchedTypeError
+@UnexpectedTypeError = UnexpectedTypeError
+@UnboundVariableError = UnboundVariableError

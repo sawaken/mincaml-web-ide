@@ -130,3 +130,7 @@ if exports?
   exports.Program = Program
   exports.Closure = Closure
   exports.Continuation = Continuation
+
+@Program = Program
+@Closure = Closure
+@Continuation = Continuation

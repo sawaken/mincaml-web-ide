@@ -54,3 +54,5 @@ class SourceCodeFormatter
 
 if exports?
   exports.SourceCodeFormatter = SourceCodeFormatter
+
+@SourceCodeFormatter = SourceCodeFormatter
