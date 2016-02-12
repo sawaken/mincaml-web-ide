@@ -1,4 +1,4 @@
-class SourceCodeFormatter
+class TextConverter
   @highlight = (code) ->
     keyP = /(\b)(in|let|rec|if|then|else)(\b)/g
     intP = /(\b)([0-9]+)(\b)/g
@@ -8,14 +8,14 @@ class SourceCodeFormatter
       .replace(intP, '$1<span class="int-word">$2</span>$3')
       .replace(valueP, '$1<span class="value-word">$2</span>$3')
 
-  @htmlEscape = (code) ->
+  @toHtml = (code) ->
     code
       .replace(/\r\n|\r|\n/g, '<br>')
       .replace(/\s\s/g, ' &nbsp;')
       .replace(/<br>\s/g, '<br>&nbsp;')
 
   @decorate = (code) ->
-    @htmlEscape(@highlight(code))
+    @toHtml(@highlight(code))
 
   @insert = (string, pos, inserted) ->
     string.substr(0, pos) + inserted + string.substr(pos)
@@ -56,6 +56,6 @@ class SourceCodeFormatter
     {leftString: lines[lines.length - 1], line: lines.length}
 
 if exports?
-  exports.SourceCodeFormatter = SourceCodeFormatter
+  exports.TextConverter = TextConverter
 
-@SourceCodeFormatter = SourceCodeFormatter
+@TextConverter = TextConverter
