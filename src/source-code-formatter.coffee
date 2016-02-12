@@ -9,7 +9,10 @@ class SourceCodeFormatter
       .replace(valueP, '$1<span class="value-word">$2</span>$3')
 
   @htmlEscape = (code) ->
-    code.replace(/\r\n|\r|\n/g, '<br>').replace(/\s\s/g, ' &nbsp;')
+    code
+      .replace(/\r\n|\r|\n/g, '<br>')
+      .replace(/\s\s/g, ' &nbsp;')
+      .replace(/<br>\s/g, '<br>&nbsp;')
 
   @decorate = (code) ->
     @htmlEscape(@highlight(code))
