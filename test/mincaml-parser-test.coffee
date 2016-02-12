@@ -19,7 +19,7 @@ describe 'test mincaml parser', ->
   before ->
     peg = require 'pegjs'
     fs = require 'fs'
-    grammerFile = __dirname + '/../parser/mincaml.pegjs'
+    grammerFile = __dirname + '/../parser/mincaml-parser.pegjs'
     mincamlParser = peg.buildParser fs.readFileSync(grammerFile, 'utf8')
 
   it 'arithmetic expression', ->
