@@ -8,6 +8,9 @@ class TextConverter
       .replace(intP, '$1<span class="int-word">$2</span>$3')
       .replace(valueP, '$1<span class="value-word">$2</span>$3')
 
+  @escapeTag = (rowCode) ->
+    rowCode.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
   @toHtml = (code) ->
     code
       .replace(/\r\n|\r|\n/g, '<br>')
