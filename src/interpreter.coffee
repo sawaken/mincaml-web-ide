@@ -107,6 +107,9 @@ class Closure
     newEnv = [{"#{firstParamName}": value}].concat(@env)
     new Closure(newEnv, @paramNames.slice(1), @bodyExp)
 
+  toString: ->
+    '<#Closure>'
+
 class Continuation
   constructor: (@context, @visitType, @step) ->
 

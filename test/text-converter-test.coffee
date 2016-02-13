@@ -62,3 +62,8 @@ describe 'test text-converter', ->
     res = TextConverter.caret(src, 14)
     expect(res.leftString).to.equal(' pi')
     expect(res.line).to.equal(3)
+
+  it 'value to string', ->
+    res = TextConverter.valueToString([1, true, null, [null, null]])
+    ans = '(1, true, unit, (unit, unit))'
+    expect(res).to.equal(ans)

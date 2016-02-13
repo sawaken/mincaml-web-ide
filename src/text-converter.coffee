@@ -55,6 +55,14 @@ class TextConverter
     lines = rowCode.replace(/\r\n/g, '\n').substr(0, pos).split(/\r\n|\r|\n/)
     {leftString: lines[lines.length - 1], line: lines.length}
 
+  @valueToString = (value) ->
+    if value == null
+      "unit"
+    else if value instanceof Array
+      '(' + (@valueToString(a) for a in value).join(', ') + ')'
+    else
+      value.toString()
+
 if exports?
   exports.TextConverter = TextConverter
 
