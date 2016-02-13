@@ -19,7 +19,7 @@ end
 
 rule '.js' => '.coffee' do |t|
   coffee_path = './node_modules/.bin/coffee'
-  sh "#{coffee_path} -c #{t.source}"
+  sh "#{coffee_path} -cb #{t.source}"
 end
 
 rule './parser/mincaml-parser.js' => './parser/mincaml-parser.pegjs' do |t|

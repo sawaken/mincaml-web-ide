@@ -65,5 +65,3 @@ class TextConverter
 
 if exports?
   exports.TextConverter = TextConverter
-
-@TextConverter = TextConverter
