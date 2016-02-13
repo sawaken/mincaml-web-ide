@@ -1,12 +1,33 @@
 class Program
-  constructor: (ast) ->
-    @cont = @evaluate(ast, {})
+  constructor: (@ast) ->
+    @cont = @evaluate(@ast, {})
     @terminated = false
 
   step: () ->
     unless @terminated
       @cont = @cont.step()
       @terminated = !(@cont instanceof Continuation)
+
+  markLineHeads: ->
+    map = []
+    for a in @flattenAST(@ast)
+      l = a.location.start.line
+      o = a.location.start.offset
+      if map[l] == undefined || o < map[l].location.start.offset
+        map[l] = a
+    for a in map
+      a.mostLeft = true if a != undefined
+
+  flattenAST: (ast) ->
+    res = [ast]
+    if ast.syntax == undefined || ast.syntax == 'identifier'
+      []
+    else if ast.syntax == 'parenthesis'
+      @flattenAST(ast.exp)
+    else
+      for key, val of ast
+        res = res.concat(@flattenAST(val))
+      res
 
   evaluate: (ast, env = {}) ->
     context = {ast: ast, env: env}
