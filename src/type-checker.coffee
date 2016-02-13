@@ -84,6 +84,12 @@ class TypeChecker
         @typing(ast.leftExp, env)
         @unifyOneAST(ast.leftExp, funcType)
         ast.expType = expType
+      when 'eq', 'le'
+        @typing(ast.leftExp, env)
+        @typing(ast.rightExp, env)
+        @unifyOneAST(ast.leftExp, @newIntType())
+        @unifyOneAST(ast.rightExp, @newIntType())
+        ast.expType = @newBoolType()
       when 'eq', 'le', 'add', 'sub', 'mul', 'div'
         @typing(ast.leftExp, env)
         @typing(ast.rightExp, env)
