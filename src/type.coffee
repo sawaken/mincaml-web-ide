@@ -53,7 +53,10 @@ class Type
       switch @getTypeName()
         when 'Func'
           [l, r] = @getTypeArgs()
-          leftStr = if l.getTypeName() == 'Func' then "()" else l.toString()
+          leftStr = if l.getTypeName() == 'Func'
+            "(#{l.toString()})"
+          else
+            l.toString()
           rightStr = r.toString()
           leftStr + ' -> ' + rightStr
         when 'Tuple'
