@@ -14,17 +14,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.js"></script>
 
     <script src="./parser/mincaml-parser.js"></script>
-    <script src="./src/source-code-formatter.js"></script>
+    <script src="./src/text-converter.js"></script>
     <script src="./src/dispatcher.js"></script>
     <script src="./src/interpreter.js"></script>
-    <script src="./src/type-checker.js"></script>
     <script src="./src/type.js"></script>
+    <script src="./src/type-checker.js"></script>
     <script src="./ui/view.js"></script>
     <style>
         .panel-position {
             position: absolute;
             left: 0; top: 0;
-            width:100%; height: 100%;
+            width:100%;
+            min-height: 100%;
         }
         .editor-cstyle {
             font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
@@ -34,11 +35,11 @@
             padding-left: 5px;
             padding-right: 10px;
         }
-        #editor-back-panel {
+        .editor-back-panel {
             background-color: #2C2C2C;
             color: white;
         }
-        #editor-front-panel {
+        .editor-front-panel {
             background-color: rgba(0,0,0,0);
             border: none;
             resize: none;
@@ -57,14 +58,89 @@
             color: white;
         }
         .bpoint {
-          width: 20px;
+          text-align: center;
+          width: 100%;
           height: 1.2em;
         }
         .bpoint:hover {
           background-color: #aaaaaa;
         }
+        .clickable {
+          cursor: pointer;
+        }
+
+        /*
+          Page-Blocks
+        */
         html, body, .full-height {
             height: 100%;
+        }
+        .ide-whole {
+          min-width: 800px;
+        }
+        .ide-header {
+          height: 10%;
+          min-height: 50px;
+        }
+        .ide-content {
+          height: 90%;
+          min-height: 500px;
+        }
+        .ide-right {
+          height: 100%;
+          padding-left: 50px;
+          padding-right: 50px;
+        }
+        .ide-screen-header {
+          margin-top: 0;
+          padding-bottom: 0;
+        }
+        .ide-screen {
+          height: 35%;
+          margin-top: 10px;
+          overflow: auto;
+        }
+        .ide-left {
+          height: 100%;
+        }
+        .ide-left-header {
+          height: 5%;
+        }
+        .ide-left-content {
+          height: 85%;
+          overflow: auto;
+        }
+        .ide-left-footer {
+          text-align: center;
+          padding-top: 10px;
+          height: 10%;
+        }
+        .editor-line-obi {
+          height: 100%;
+          text-align: right;
+          width: 40px;
+        }
+        .editor-breakpoint-obi {
+          height: 100%;
+          text-align: center;
+          width: 25px;
+        }
+        .editor-box {
+          min-height: 100%;
+        }
+
+        /*
+          Font Styles
+        */
+        .color-green {
+          color: lime;
+        }
+        .color-red {
+          color: red;
+        }
+        .break-point-symbol {
+          color: #D22B2B;
+          font-size: 0.8em
         }
         .key-word {
           color: red;
@@ -75,64 +151,18 @@
         .value-word {
           color: green;
         }
+        .exp-error {
+          background-color: rgba(255, 0, 0, 0.3);
+        }
+        .position-error {
+          border-bottom: solid 1px red;
+        }
+        .breaking-exp {
+          background-color: rgba(0, 255, 255, 0.3);
+        }
     </style>
 </head>
 <body>
-<div class="container-fluid full-height" style="min-width: 800px;">
-    <div class="row bg-inverse card-header" style="height: 10%; min-height: 50px;">
-        <div class="container">
-            <h2 class="text-md-center">MinCaml Web IDE</h2>
-        </div>
-    </div>
-    <div class="row" style="height: 90%; min-height: 500px;">
-        <div class="col-xs-6 bg-grey" style="height: 100%;">
-            <div style="height: 5%;">
-                <i class="fa fa-check" style="color: lime"></i>
-                <span class="editor-cstyle" style="color: lime">Syntax OK</span>
-            </div>
-            <div class="row" style="height: 85%; overflow: auto;">
-                <div id="line-obi" class="col-xs-1 editor-cstyle" style="height: 100%; text-align: right; width: 40px;">
-                    <div>1</div>
-                    <div>2</div>
-                    <div>3</div>
-                </div>
-                <div id="breackpoint-obi" class="col-xs-1 editor-cstyle" style="height: 100%; text-align: center; width: 25px;">
-                    <div class="bpoint"></div>
-                    <div class="bpoint"><i class="fa fa-circle" style="color: red; font-size: 0.6em"></i></div>
-                    <div class="bpoint"></div>
-                </div>
-                <div id="editor-box" class="col-xs-10 bg-inverse" style="min-height: 100%;"></div>
-            </div>
-            <div style="text-align: center; padding-top: 10px; height: 10%;">
-                <span style="">
-                    <span class="btn-group" style="padding-left: 5px; padding-right: 5px;">
-                        <a class="btn btn-primary btn-md" role="button">
-                            <i class="fa fa-play"></i> Run
-                        </a>
-                    </span>
-                    <span class="btn-group" style="padding-left: 5px; padding-right: 5px;">
-                        <a class="btn btn-primary btn-md" role="button">
-                            <i class="fa fa-stop"></i> Stop
-                        </a>
-                    </span>
-                </span>
-            </div>
-        </div>
-        <div class="col-xs-6 bg-grey" style="height: 100%; padding-left: 50px; padding-right: 50px;">
-            <div class="modal-header" style="margin-top: 0; padding-bottom: 0;">
-                <h1><small>status</small></h1>
-            </div>
-            <div class="bg-inverse editor-cstyle" spellcheck="false" style="height: 35%; margin-top: 10px;">
-                ok
-            </div>
-            <div class="modal-header" style="margin-top: 0; padding-bottom: 0;">
-                <h1><small>result</small></h1>
-            </div>
-            <div class="bg-inverse editor-cstyle" spellcheck="false" style="height: 35%; margin-top: 10px;">
-                ok
-            </div>
-        </div>
-    </div>
-</div>
+  <div id="ide-view" class="full-height"></div>
 </body>
 </html>
