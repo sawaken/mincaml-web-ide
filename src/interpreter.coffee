@@ -71,7 +71,7 @@ class Program
                 when 'neg' then -x
       when 'tuple'
         new Continuation context, 'in', =>
-          @evaluateSeq ast.exps, (xs) =>
+          @evaluateSeq ast.exps, env, (xs) =>
             new Continuation context, 'out', => xs
       when 'parenthesis'
         @evaluate(ast.exp, env)
@@ -89,10 +89,10 @@ class Program
       when 'unit'
         new Continuation context, 'bottom', => null
 
-  evaluateSeq: (exps, f, xs = []) ->
+  evaluateSeq: (exps, env, f, xs = []) ->
     if exps.length > 0
-      @evaluate(exps[0]).then (x) =>
-        @evaluateSeq(exps.slice(1), f, xs.concat([x]))
+      @evaluate(exps[0], env).then (x) =>
+        @evaluateSeq(exps.slice(1), env, f, xs.concat([x]))
     else
       f(xs)
 
@@ -134,7 +134,7 @@ class Program
       for name, val of h
         flat[name] = val if flat[name] == undefined
     pairs = ("#{name}: #{@valueToString(val)}" for name, val of flat)
-    '{' + pairs.join(', ') + '}'  
+    '{' + pairs.join(', ') + '}'
 
 class Closure
   constructor: (@env, @paramNames, @bodyExp) ->
