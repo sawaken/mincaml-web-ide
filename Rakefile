@@ -12,6 +12,27 @@ task :install do
   sh 'npm install'
 end
 
+task :listen do
+  loop do
+    `rake compile-all`
+    sleep(1)
+  end
+end
+
+task :deploy do
+  sh "test $(git rev-parse --abbrev-ref HEAD) == 'master'"
+  sh 'touch */*.coffee */*.pegjs */*.cjsx'
+  sh 'rake compile-all'
+  sh 'git checkout gh-pages'
+  sh 'git add */*.js'
+  sh 'git commit'
+  sh 'git checkout master'
+  sh "echo 'Deploy is Succeeded. You should set Tag manually.'"
+end
+
+# Make rules
+# ----------
+
 rule '.js' => '.cjsx' do |t|
   cjsx_path = './node_modules/.bin/cjsx'
   sh "#{cjsx_path} -c #{t.source}"
@@ -28,10 +49,3 @@ rule './parser/mincaml-parser.js' => './parser/mincaml-parser.pegjs' do |t|
 end
 
 rule 'compile-all' => SRC.map { |f| f.gsub(/(\.[a-z]+$)/, '.js') }
-
-task 'listen' do
-  loop do
-    `rake compile-all`
-    sleep(1)
-  end
-end
