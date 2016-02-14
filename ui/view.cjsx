@@ -136,9 +136,10 @@ RightBox = React.createClass
       <div className="modal-header ide-screen-header">
         <h1><small>status</small></h1>
       </div>
-      <div className="bg-inverse editor-cstyle ide-screen">
-        {@props.console.status}
-      </div>
+      <div
+        className="bg-inverse editor-cstyle ide-screen"
+        dangerouslySetInnerHTML={{__html: @props.console.status}}
+      ></div>
       <div className="modal-header ide-screen-header">
         <h1><small>result</small></h1>
       </div>

@@ -19,6 +19,10 @@ describe 'test text-converter', ->
     res = TextConverter.toHtml(src)
     expect(res).to.equal(ans)
 
+  it 'escapte tag', ->
+    res = TextConverter.escapeTag('<a>hoge</a>')
+    expect(res).to.equal('&lt;a&gt;hoge&lt;/a&gt;')
+
   it 'decorate', ->
     src = '  x + 1'
     ans = ' &nbsp;x + <span class="int-word">1</span>'
@@ -68,8 +72,3 @@ describe 'test text-converter', ->
     res = TextConverter.caret(src, 14)
     expect(res.leftString).to.equal(' pi')
     expect(res.line).to.equal(3)
-
-  it 'value to string', ->
-    res = TextConverter.valueToString([1, true, null, [null, null]])
-    ans = '(1, true, unit, (unit, unit))'
-    expect(res).to.equal(ans)

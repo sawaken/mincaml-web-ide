@@ -134,7 +134,7 @@ class Dispatcher
       ast = mincamlParser.parse(validRowCode)
       (new TypeChecker(ast)).check()
       program = new Program(ast)
-      program.markLineHeads()
+      Program.markLineHeads(ast)
       @store.execution.status = Store.Execution.Running
       @store.execution.program = program
 
@@ -155,18 +155,19 @@ class Dispatcher
       @store.editor.ornamentalCode =
         TextConverter.decorate(@store.editor.rowCode)
       if program.terminated
-        valueStr = TextConverter.valueToString(program.cont)
+        valueStr = Program.valueToString(program.cont)
         @store.console.results.push(valueStr)
         @killProgram()
       else
         ast = program.cont.context.ast
         line = ast.location.start.line
-        if @store.editor.breakpointLineMap[line] && ast.mostLeft == true
+        if @store.editor.breakpointLineMap[line] && ast.leftMost == true
           if program.cont.isIn() || program.cont.isBottom()
             @store.execution.status = Store.Execution.Breaking
             @store.console.status = "Breaking at #{ast.syntax} " +
             "from #{ast.location.start.line.toString()}:" +
-            "#{ast.location.start.column}"
+            "#{ast.location.start.column}<br>" +
+            "#{Program.envToString(program.cont.context.env)}"
             code = TextConverter.multiMark @store.editor.rowCode, [
               {location: ast.location, className: 'breaking-exp'}
             ]

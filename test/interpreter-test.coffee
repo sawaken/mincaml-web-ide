@@ -210,3 +210,41 @@ describe 'interpreter test', ->
       expect(p.cont.isOut()).to.be.true
       p.step()
       expect(p.cont).to.eql([1, 2])
+
+  it 'mark line heads (class method)', ->
+    # use parser
+    peg = require 'pegjs'
+    fs = require 'fs'
+    grammerFile = __dirname + '/../parser/mincaml-parser.pegjs'
+    mincamlParser = peg.buildParser fs.readFileSync(grammerFile, 'utf8')
+    ast = mincamlParser.parse('if true then\n  1\nelse\n  2')
+    Program.markLineHeads(ast)
+    expect(ast.leftMost).to.be.true
+    expect(ast.condExp.leftMost).to.be.undefined
+    expect(ast.thenExp.leftMost).to.be.true
+    expect(ast.elseExp.leftMost).to.be.true
+
+  it 'flatten ast (class method)', ->
+    ast =
+      syntax: 'let'
+      varName: {syntax: 'identifier', string: 'x'}
+      varExp:
+        syntax: 'parenthesis'
+        exp: {syntax: 'int', number: 1}
+      bodyExp: {syntax: 'var-ref', string: 'x'}
+    res = Program.flattenAST(ast)
+    expect(res.length).to.equal(3)
+    expect(res).to.include(ast)
+    expect(res).to.include(ast.varExp.exp)
+    expect(res).to.include(ast.bodyExp)
+
+  it 'value to string (class method)', ->
+    res = Program.valueToString([1, true, null, [null, null]])
+    ans = '(1, true, unit, (unit, unit))'
+    expect(res).to.equal(ans)
+
+  it 'env to string (class method)', ->
+    env = [{a: 1, b: 2}, {a: 3, c: 4}]
+    res = Program.envToString(env)
+    ans = '{a: 1, b: 2, c: 4}'
+    expect(res).to.equal(ans)

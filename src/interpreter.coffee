@@ -8,27 +8,6 @@ class Program
       @cont = @cont.step()
       @terminated = !(@cont instanceof Continuation)
 
-  markLineHeads: ->
-    map = []
-    for a in @flattenAST(@ast)
-      l = a.location.start.line
-      o = a.location.start.offset
-      if map[l] == undefined || o < map[l].location.start.offset
-        map[l] = a
-    for a in map
-      a.mostLeft = true if a != undefined
-
-  flattenAST: (ast) ->
-    res = [ast]
-    if ast.syntax == undefined || ast.syntax == 'identifier'
-      []
-    else if ast.syntax == 'parenthesis'
-      @flattenAST(ast.exp)
-    else
-      for key, val of ast
-        res = res.concat(@flattenAST(val))
-      res
-
   evaluate: (ast, env = {}) ->
     context = {ast: ast, env: env}
     switch ast.syntax
@@ -116,6 +95,46 @@ class Program
         @evaluateSeq(exps.slice(1), f, xs.concat([x]))
     else
       f(xs)
+
+  # Class methods
+  # ----------
+
+  @markLineHeads = (ast) ->
+    map = []
+    for a in @flattenAST(ast)
+      l = a.location.start.line
+      o = a.location.start.column
+      if map[l] == undefined || o < map[l].location.start.column
+        map[l] = a
+    for a in map
+      a.leftMost = true if a != undefined
+
+  @flattenAST = (ast) ->
+    res = [ast]
+    if ast.syntax == undefined || ast.syntax == 'identifier'
+      []
+    else if ast.syntax == 'parenthesis'
+      @flattenAST(ast.exp)
+    else
+      for key, val of ast
+        res = res.concat(@flattenAST(val))
+      res
+
+  @valueToString = (value) ->
+    if value == null
+      "unit"
+    else if value instanceof Array
+      '(' + (@valueToString(a) for a in value).join(', ') + ')'
+    else
+      value.toString()
+
+  @envToString = (env) ->
+    flat = {}
+    for h in env
+      for name, val of h
+        flat[name] = val if flat[name] == undefined
+    pairs = ("#{name}: #{@valueToString(val)}" for name, val of flat)
+    '{' + pairs.join(', ') + '}'  
 
 class Closure
   constructor: (@env, @paramNames, @bodyExp) ->
