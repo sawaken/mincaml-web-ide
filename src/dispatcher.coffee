@@ -76,6 +76,7 @@ class Dispatcher
   setCodeWithoutCheck: (rowCode) ->
     escapedRowCode = TextConverter.escapeTag(rowCode)
     @store.codeStatus = Store.CodeStatus.Unknown
+    @store.console.status = ''
     @store.editor.rowCode = rowCode
     @store.editor.ornamentalCode = TextConverter.decorate(escapedRowCode)
 
@@ -152,12 +153,14 @@ class Dispatcher
   stepProgram: () ->
     if @store.execution.status == Store.Execution.Running
       program = @store.execution.program
+      @store.console.status = ''
       @store.editor.ornamentalCode =
         TextConverter.decorate(@store.editor.rowCode)
       if program.terminated
         valueStr = Program.valueToString(program.cont)
         @store.console.results.push(valueStr)
         @killProgram()
+        @store.console.status = 'Program terminated'
       else
         ast = program.cont.context.ast
         line = ast.location.start.line

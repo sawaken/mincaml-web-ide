@@ -45,39 +45,52 @@ LeftBox = React.createClass
       {display: 'none'}
 
   codeStatus: ->
-    switch @props.codeStatus
-      when Store.CodeStatus.Unknown
+    switch @props.execution.status
+      when Store.Execution.Running
         <span>
-          <i className="fa fa-spinner fa-spin"></i>
+          <i className="fa fa-cog fa-spin color-thin"></i>
+          <span className="editor-cstyle color-thin">Now Running...</span>
         </span>
-      when Store.CodeStatus.Ok
+      when Store.Execution.Breaking
         <span>
-          <i className="fa fa-check color-green"></i>
-          <span className="editor-cstyle color-green">Syntax OK</span>
+          <i className="fa fa-stop color-thin"></i>
+          <span className="editor-cstyle color-thin">Now Breaking...</span>
         </span>
-      when Store.CodeStatus.TypeError
-        <span>
-          <i className="fa fa-times color-red"></i>
-          <span className="editor-cstyle color-red">Type Error</span>
-        </span>
-      when Store.CodeStatus.SyntaxError
-        if @props.editor.rowCode == ''
-          <span></span>
-        else
-          <span>
-            <i className="fa fa-times color-red"></i>
-            <span className="editor-cstyle color-red">Syntax Error</span>
-          </span>
-      when Store.CodeStatus.VarError
-        <span>
-          <i className="fa fa-times color-red"></i>
-          <span className="editor-cstyle color-red">Unbound Variable</span>
-        </span>
+      when Store.Execution.Stopping
+        switch @props.codeStatus
+          when Store.CodeStatus.Unknown
+            <span>
+              <i className="fa fa-spinner fa-spin color-thin"></i>
+              <span className="editor-cstyle color-thin">Now Editing...</span>
+            </span>
+          when Store.CodeStatus.Ok
+            <span>
+              <i className="fa fa-check color-green"></i>
+              <span className="editor-cstyle color-green">Syntax OK</span>
+            </span>
+          when Store.CodeStatus.TypeError
+            <span>
+              <i className="fa fa-times color-red"></i>
+              <span className="editor-cstyle color-red">Type Error</span>
+            </span>
+          when Store.CodeStatus.SyntaxError
+            if @props.editor.rowCode == ''
+              <span></span>
+            else
+              <span>
+                <i className="fa fa-times color-red"></i>
+                <span className="editor-cstyle color-red">Syntax Error</span>
+              </span>
+          when Store.CodeStatus.VarError
+            <span>
+              <i className="fa fa-times color-red"></i>
+              <span className="editor-cstyle color-red">Unbound Variable</span>
+            </span>
 
   render: ->
     <div className="col-xs-6 bg-grey ide-left">
       <div className="row ide-left-header">
-        {@codeStatus()}
+
       </div>
       <div className="row ide-left-content">
         <LineNumberObi count={@props.editor.lineNumbers}/>
@@ -91,22 +104,35 @@ LeftBox = React.createClass
           execution={@props.execution}
         />
       </div>
+      <div className="row ide-left-status">
+        <div className="col-xs-1 editor-status-a"></div>
+        <div className="col-xs-1 editor-status-b"></div>
+        <div className="col-xs-10 editor-status-c">
+          {@codeStatus()}
+        </div>
+      </div>
       <div className="row ide-left-footer">
-        <a className="btn btn-primary btn-md" role="button"
-          onClick={=> dispatcher.startProgram(@props.editor.rowCode)}
-          style={@runButtonDisplay()}>
-          <i className="fa fa-play"></i> Run
-        </a>
-        <a className="btn btn-primary btn-md" role="button"
-          onClick={=> dispatcher.killProgram()}
-          style={@stopButtonDisplay()}>
-          <i className="fa fa-stop"></i> Stop
-        </a>
-        <a className="btn btn-primary btn-md" role="button"
-          onClick={=> dispatcher.stopBreaking()}
-          style={@continueButtonDisplay()}>
-          <i className="fa fa-play"></i> Continue
-        </a>
+        <span className="btn-position">
+          <a className="btn btn-primary btn-md" role="button"
+            onClick={=> dispatcher.startProgram(@props.editor.rowCode)}
+            style={@runButtonDisplay()}>
+            <i className="fa fa-play"></i> Run
+          </a>
+        </span>
+        <span className="btn-position">
+          <a className="btn btn-primary btn-md" role="button"
+            onClick={=> dispatcher.killProgram()}
+            style={@stopButtonDisplay()}>
+            <i className="fa fa-stop"></i> Stop
+          </a>
+        </span>
+        <span className="btn-position">
+          <a className="btn btn-primary btn-md" role="button"
+            onClick={=> dispatcher.stopBreaking()}
+            style={@continueButtonDisplay()}>
+            <i className="fa fa-play"></i> Continue
+          </a>
+        </span>
       </div>
     </div>
 
