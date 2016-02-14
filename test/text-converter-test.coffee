@@ -32,14 +32,20 @@ describe 'test text-converter', ->
 
   it 'mark', ->
     src = 'abc\ndef'
-    location = {start: {line: 2, offset: 1}, end: {line: 2, offset: 2}}
+    location =
+      start: {line: 2, column: 2, offset: 5}
+      end: {line: 2, column: 3, offset: 6}
     res = TextConverter.mark(src, location, 'foo')
     expect(res).to.equal('abc\nd<span class="foo">e</span>f')
 
   it 'multi mark', ->
     src = 'abc'
-    l1 = {start: {line: 1, offset: 0}, end: {line: 1, offset: 1}}
-    l2 = {start: {line: 1, offset: 2}, end: {line: 1, offset: 3}}
+    l1 =
+      start: {line: 1, column: 1, offset: 0}
+      end: {line: 1, column: 2, offset: 1}
+    l2 =
+      start: {line: 1, column: 3, offset: 2}
+      end: {line: 1, column: 4, offset: 3}
     specs = [{location: l1, className: 'foo'}, {location: l2, className: 'bar'}]
     res = TextConverter.multiMark(src, specs)
     ans = '<span class="foo">a</span>b<span class="bar">c</span>'

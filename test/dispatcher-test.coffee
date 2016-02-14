@@ -116,7 +116,6 @@ describe 'test dispatcher', ->
         location:
           start:
             line: 1
-            offset: 0
       s.execution.status = S.Execution.Running
       s.execution.program = new Program(ast)
       d.stepProgram()

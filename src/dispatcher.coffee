@@ -166,7 +166,7 @@ class Dispatcher
             @store.execution.status = Store.Execution.Breaking
             @store.console.status = "Breaking at #{ast.syntax} " +
             "from #{ast.location.start.line.toString()}:" +
-            "#{ast.location.start.offset}"
+            "#{ast.location.start.column}"
             code = TextConverter.multiMark @store.editor.rowCode, [
               {location: ast.location, className: 'breaking-exp'}
             ]

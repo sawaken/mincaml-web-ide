@@ -27,10 +27,10 @@ class TextConverter
     markedLines = []
     for line, idx in @lines(rowCode)
       if idx == location.end.line - 1
-        pos = location.end.offset
+        pos = location.end.column - 1
         line = @insert(line, pos, '</span>')
       if idx == location.start.line - 1
-        pos = location.start.offset
+        pos = location.start.column - 1
         line = @insert(line, pos, '<span class="' + className + '">')
       markedLines.push(line)
     markedLines.join('\n')
@@ -38,16 +38,15 @@ class TextConverter
   # locations must not be overlapped
   @multiMark = (rowCode, specs) ->
     sortedSpecs = specs.sort (a, b) =>
-      as = a.location.start
-      bs = b.location.start
-      if as.line < bs.line || (as.line == bs.line && as.offset < bs.offset)
+      if a.location.start.offset < b.location.start.offset
         1
-      else if as.line > bs.line || (as.line == bs.line && as.offset > bs.offset)
-        -1
       else
-        0
+        -1
     res = rowCode
     for spec in sortedSpecs
+      l = spec.location
+      if l.start.line == l.end.line && l.start.column == l.end.column
+        continue
       res = @mark(res, spec.location, spec.className)
     res
 
