@@ -92,8 +92,8 @@ html, body, .full-height {
   padding-right: 10px;
 }
 .editor-back-panel {
-  background-color: #2C2C2C;
-  color: white;
+  background-color: #282b2e;
+  color: #c4c4c4;
 }
 .editor-front-panel {
   background-color: rgba(0,0,0,0);
@@ -133,10 +133,10 @@ html, body, .full-height {
   Font Styles
 */
 .color-green {
-  color: lime;
+  color: #36D86C;
 }
 .color-red {
-  color: red;
+  color: #FF5C3F;
 }
 .color-thin {
   color: grey;
@@ -146,13 +146,13 @@ html, body, .full-height {
   font-size: 0.8em
 }
 .key-word {
-  color: red;
+  color: #cc7832;
 }
 .int-word {
-  color: orange;
+  color: #6897BB;
 }
 .value-word {
-  color: green;
+  color: #6897BB;
 }
 .exp-error {
   background-color: rgba(255, 0, 0, 0.3);
