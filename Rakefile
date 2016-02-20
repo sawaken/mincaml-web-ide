@@ -19,15 +19,20 @@ task :listen do
   end
 end
 
-task :deploy do
-  sh "test $(git rev-parse --abbrev-ref HEAD) == 'master'"
+task 'force-compile' do
   sh 'touch */*.coffee */*.pegjs */*.cjsx'
   sh 'rake compile-all'
+end
+
+task :deploy do
   sh 'git checkout gh-pages'
-  sh 'git add */*.js'
+  sh 'git merge master'
+  sh 'rake force-compile'
+  sh 'git add -f */*.js'
   sh 'git commit'
   sh 'git checkout master'
-  sh "echo 'Deploy is Succeeded. You should set Tag manually.'"
+  sh "echo 'Deploy is Succeeded.'"
+  sh "echo 'You should set release-tag on branch master manually.'"
 end
 
 # Make rules

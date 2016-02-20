@@ -60,7 +60,7 @@ class TypeChecker
         funcExpType = @newTypeVar()
         funcType = funcExpType
         varTable = {}
-        for name in ast.funcParamNames.reverse()
+        for name in ast.funcParamNames.slice().reverse()
           t = @newTypeVar()
           varTable[name.string] = t
           funcType = @newFuncType(t, funcType)

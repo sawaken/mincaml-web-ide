@@ -113,14 +113,24 @@ describe 'test mincaml parser', ->
       bodyExp: {syntax: 'add'}
 
   it 'let rec', ->
-    ptest 'let rec f x = x + x in f 1',
+    ptest 'let rec f x y = x - y in f 1 2',
       syntax: 'let-rec'
       funcName: {syntax: 'identifier', string: 'f'}
       funcParamNames: [
         {syntax: 'identifier', string: 'x'}
+        {syntax: 'identifier', string: 'y'}
       ]
-      funcExp: {syntax: 'add'}
-      bodyExp: {syntax: 'apply'}
+      funcExp:
+        syntax: 'sub'
+        leftExp: {syntax: 'var-ref', string: 'x'}
+        rightExp: {syntax: 'var-ref', string: 'y'}
+      bodyExp:
+        syntax: 'apply'
+        leftExp:
+          syntax: 'apply'
+          leftExp: {syntax: 'var-ref', string: 'f'}
+          rightExp: {syntax: 'int', number: 1}
+        rightExp: {syntax: 'int', number: 2}
 
   it 'let tuple', ->
     ptest 'let (x, y) = t in x + y',

@@ -96,7 +96,7 @@ describe 'interpreter test', ->
       expect(p.cont.context.ast).to.equal(ast)
       expect(p.cont.isOut()).to.be.true
       p.step()
-      expect(p.cont).to.equal(2)
+      expect(p.cont).to.equal(-1)
 
   it 'simple let-tuple', ->
     test 'simpleLetTuple', (ast, p) ->

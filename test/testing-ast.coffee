@@ -25,7 +25,7 @@ class TestingAST
         {syntax: 'identifier', string: 'y'}
       ]
       funcExp:
-        syntax: 'add'
+        syntax: 'sub'
         leftExp: {syntax: 'var-ref', string: 'x'}
         rightExp: {syntax: 'var-ref', string: 'y'}
       bodyExp:
@@ -34,7 +34,7 @@ class TestingAST
           syntax: 'apply'
           leftExp: {syntax: 'var-ref', string: 'f'}
           rightExp: {syntax: 'int', number: 1}
-        rightExp: {syntax: 'int', number: 1}
+        rightExp: {syntax: 'int', number: 2}
 
     @simpleLetTuple =
       syntax: 'let-tuple'
