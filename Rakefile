@@ -31,8 +31,8 @@ task :deploy do
   sh 'git add -f */*.js'
   sh 'git commit'
   sh 'git checkout master'
-  sh "echo 'Deploy is Succeeded.'"
-  sh "echo 'You should set release-tag on branch master manually.'"
+  puts 'Deploy is Succeeded.'
+  puts 'You should set release-tag on branch master manually.'
 end
 
 # Make rules
